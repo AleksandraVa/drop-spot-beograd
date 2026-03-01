@@ -1,11 +1,14 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '@/i18n/LanguageContext';
-import { Luggage, Menu, X, Globe } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
+import { Menu, X, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
+import logo from '@/assets/logo.png';
 
 const Navbar = () => {
   const { t, language, setLanguage } = useLanguage();
+  const { user, hasRole, signOut } = useAuth();
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -14,17 +17,15 @@ const Navbar = () => {
   const navLinks = [
     { path: '/', label: t.nav.home },
     { path: '/locations', label: t.nav.locations },
-    { path: '/partner', label: t.nav.partnerDashboard },
-    { path: '/admin', label: t.nav.adminDashboard },
+    ...(user && hasRole('partner') ? [{ path: '/partner', label: t.nav.partnerDashboard }] : []),
+    ...(user && hasRole('admin') ? [{ path: '/admin', label: t.nav.adminDashboard }] : []),
   ];
 
   return (
     <nav className="sticky top-0 z-50 border-b border-border bg-card/80 backdrop-blur-lg">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-primary">
-            <Luggage className="h-5 w-5 text-primary-foreground" />
-          </div>
+          <img src={logo} alt="DropSpot" className="h-9 w-9 rounded-lg object-contain" />
           <span className="font-heading text-xl font-bold text-foreground">DropSpot</span>
         </Link>
 
@@ -54,11 +55,17 @@ const Navbar = () => {
             {language === 'sr' ? 'EN' : 'SR'}
           </button>
 
-          <Link to="/auth" className="hidden md:block">
-            <Button size="sm" className="bg-gradient-primary font-medium text-primary-foreground hover:opacity-90">
-              {t.nav.login}
+          {user ? (
+            <Button size="sm" variant="outline" onClick={signOut} className="hidden md:flex">
+              {t.nav.logout}
             </Button>
-          </Link>
+          ) : (
+            <Link to="/auth" className="hidden md:block">
+              <Button size="sm" className="bg-gradient-primary font-medium text-primary-foreground hover:opacity-90">
+                {t.nav.login}
+              </Button>
+            </Link>
+          )}
 
           <button
             className="md:hidden text-foreground"
@@ -87,11 +94,17 @@ const Navbar = () => {
                 {link.label}
               </Link>
             ))}
-            <Link to="/auth" onClick={() => setMobileOpen(false)}>
-              <Button size="sm" className="w-full bg-gradient-primary font-medium text-primary-foreground">
-                {t.nav.login}
+            {user ? (
+              <Button size="sm" variant="outline" onClick={() => { signOut(); setMobileOpen(false); }} className="w-full">
+                {t.nav.logout}
               </Button>
-            </Link>
+            ) : (
+              <Link to="/auth" onClick={() => setMobileOpen(false)}>
+                <Button size="sm" className="w-full bg-gradient-primary font-medium text-primary-foreground">
+                  {t.nav.login}
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
       )}
