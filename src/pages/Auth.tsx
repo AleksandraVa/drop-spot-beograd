@@ -1,18 +1,13 @@
 import { useLanguage } from '@/i18n/LanguageContext';
-import { useAuth } from '@/hooks/useAuth';
 import { useState } from 'react';
-import { useSearchParams, useNavigate, Navigate } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useToast } from '@/hooks/use-toast';
-import logo from '@/assets/logo.png';
+import { Luggage } from 'lucide-react';
 
 const Auth = () => {
   const { t } = useLanguage();
-  const { user, signIn, signUp } = useAuth();
-  const navigate = useNavigate();
-  const { toast } = useToast();
   const [searchParams] = useSearchParams();
   const defaultRole = searchParams.get('role') === 'partner' ? 'partner' : 'user';
 
@@ -21,39 +16,20 @@ const Auth = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [loading, setLoading] = useState(false);
 
-  if (user) return <Navigate to="/" replace />;
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isLogin && password !== confirmPassword) {
-      toast({ title: 'Greška', description: 'Lozinke se ne poklapaju.', variant: 'destructive' });
-      return;
-    }
-    setLoading(true);
-    try {
-      if (isLogin) {
-        const { error } = await signIn(email, password);
-        if (error) throw error;
-        navigate('/');
-      } else {
-        const { error } = await signUp(email, password, role);
-        if (error) throw error;
-        toast({ title: 'Uspešno!', description: 'Proverite email za potvrdu naloga.' });
-      }
-    } catch (err: any) {
-      toast({ title: 'Greška', description: err.message, variant: 'destructive' });
-    } finally {
-      setLoading(false);
-    }
+    // Will connect to backend later
+    alert(isLogin ? 'Login coming soon!' : 'Registration coming soon!');
   };
 
   return (
     <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 py-12">
       <div className="w-full max-w-md animate-fade-in">
         <div className="text-center mb-8">
-          <img src={logo} alt="DropSpot" className="mx-auto mb-4 h-16 w-16 object-contain" />
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-primary">
+            <Luggage className="h-6 w-6 text-primary-foreground" />
+          </div>
           <h1 className="font-heading text-2xl font-bold text-foreground">
             {isLogin ? t.auth.loginTitle : t.auth.registerTitle}
           </h1>
@@ -98,8 +74,8 @@ const Auth = () => {
                 <Input type="password" required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
               </div>
             )}
-            <Button type="submit" size="lg" disabled={loading} className="bg-gradient-primary text-primary-foreground font-semibold hover:opacity-90">
-              {loading ? '...' : isLogin ? t.auth.loginBtn : t.auth.registerBtn}
+            <Button type="submit" size="lg" className="bg-gradient-primary text-primary-foreground font-semibold hover:opacity-90">
+              {isLogin ? t.auth.loginBtn : t.auth.registerBtn}
             </Button>
           </form>
 

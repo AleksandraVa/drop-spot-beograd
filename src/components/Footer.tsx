@@ -1,7 +1,6 @@
 import { useLanguage } from '@/i18n/LanguageContext';
-import { Mail, MapPin } from 'lucide-react';
+import { Luggage, Mail, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import logo from '@/assets/logo.png';
 
 const Footer = () => {
   const { t } = useLanguage();
@@ -12,7 +11,9 @@ const Footer = () => {
         <div className="grid gap-8 md:grid-cols-3">
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <img src={logo} alt="DropSpot" className="h-8 w-8 rounded-lg object-contain" />
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-primary">
+                <Luggage className="h-4 w-4 text-primary-foreground" />
+              </div>
               <span className="font-heading text-lg font-bold text-foreground">DropSpot</span>
             </div>
             <p className="text-sm text-muted-foreground">{t.footer.description}</p>
