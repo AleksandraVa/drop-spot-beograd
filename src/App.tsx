@@ -29,8 +29,8 @@ const App = () => (
             <Route path="/locations" element={<Locations />} />
             <Route path="/locations/:id" element={<LocationDetail />} />
             <Route path="/auth" element={<Auth />} />
-            <Route path="/partner" element={<PasswordGate correctPassword="123"><PartnerDashboard /></PasswordGate>} />
-            <Route path="/admin" element={<PasswordGate correctPassword="456"><AdminDashboard /></PasswordGate>} />
+            <Route path="/partner" element={<PasswordGate key="partner" correctPassword="123"><PartnerDashboard /></PasswordGate>} />
+            <Route path="/admin" element={<PasswordGate key="admin" correctPassword="456"><AdminDashboard /></PasswordGate>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
