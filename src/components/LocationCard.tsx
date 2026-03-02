@@ -12,10 +12,9 @@ interface LocationCardProps {
   capacity: number;
   available: number;
   image: string;
-  rating: number;
 }
 
-const LocationCard = ({ id, name, address, workingHours, pricePerHour, available, image, rating }: LocationCardProps) => {
+const LocationCard = ({ id, name, address, workingHours, pricePerHour, available, image }: LocationCardProps) => {
   const { t } = useLanguage();
 
   return (
@@ -27,9 +26,6 @@ const LocationCard = ({ id, name, address, workingHours, pricePerHour, available
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           loading="lazy"
         />
-        <div className="absolute top-3 right-3 rounded-full bg-card/90 backdrop-blur-sm px-2.5 py-1 text-xs font-semibold text-foreground">
-          ⭐ {rating}
-        </div>
       </div>
 
       <div className="p-5">

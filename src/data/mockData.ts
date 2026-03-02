@@ -9,7 +9,6 @@ export const mockLocations = [
     available: 8,
     description: 'Kafić u srcu pešačke zone sa sigurnim prostorom za čuvanje prtljaga.',
     image: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&h=400&fit=crop',
-    rating: 4.8,
     approved: true,
   },
   {
@@ -22,7 +21,6 @@ export const mockLocations = [
     available: 15,
     description: 'Hotelska recepcija sa 24h dostupnošću i video nadzorom.',
     image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&h=400&fit=crop',
-    rating: 4.9,
     approved: true,
   },
   {
@@ -35,7 +33,6 @@ export const mockLocations = [
     available: 3,
     description: 'Turistički info centar pored Kalemegdana sa prostorom za prtljag.',
     image: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&h=400&fit=crop',
-    rating: 4.6,
     approved: true,
   },
   {
@@ -48,7 +45,6 @@ export const mockLocations = [
     available: 4,
     description: 'Suvenirnica u Skadarliji sa mogućnošću ostavljanja prtljaga.',
     image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&h=400&fit=crop',
-    rating: 4.5,
     approved: true,
   },
   {
@@ -61,7 +57,6 @@ export const mockLocations = [
     available: 10,
     description: 'Moderni lounge bar blizu Save sa zaključanim prostorom za prtljag.',
     image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&h=400&fit=crop',
-    rating: 4.7,
     approved: true,
   },
   {
@@ -74,7 +69,6 @@ export const mockLocations = [
     available: 7,
     description: 'Coworking prostor u Dorćolu sa lokerimaaza čuvanje prtljaga.',
     image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=400&fit=crop',
-    rating: 4.4,
     approved: true,
   },
 ];
