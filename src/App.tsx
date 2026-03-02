@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LanguageProvider } from "@/i18n/LanguageContext";
 import Navbar from "@/components/Navbar";
+import PasswordGate from "@/components/PasswordGate";
 import Index from "./pages/Index";
 import Locations from "./pages/Locations";
 import LocationDetail from "./pages/LocationDetail";
@@ -28,8 +29,8 @@ const App = () => (
             <Route path="/locations" element={<Locations />} />
             <Route path="/locations/:id" element={<LocationDetail />} />
             <Route path="/auth" element={<Auth />} />
-            <Route path="/partner" element={<PartnerDashboard />} />
-            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/partner" element={<PasswordGate correctPassword="123"><PartnerDashboard /></PasswordGate>} />
+            <Route path="/admin" element={<PasswordGate correctPassword="456"><AdminDashboard /></PasswordGate>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

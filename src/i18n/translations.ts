@@ -10,6 +10,10 @@ export const translations = {
       partnerDashboard: 'Partner panel',
       adminDashboard: 'Admin panel',
       logout: 'Odjava',
+      additionalPanels: 'Dodatni paneli',
+      wrongPassword: 'Pogrešna šifra',
+      enterPassword: 'Unesite šifru za pristup',
+      accessBtn: 'Pristupi',
     },
     hero: {
       title: 'Ostavite prtljag,',
@@ -114,6 +118,10 @@ export const translations = {
       partnerDashboard: 'Partner Panel',
       adminDashboard: 'Admin Panel',
       logout: 'Logout',
+      additionalPanels: 'Additional Panels',
+      wrongPassword: 'Wrong password',
+      enterPassword: 'Enter password to access',
+      accessBtn: 'Access',
     },
     hero: {
       title: 'Drop your bags,',

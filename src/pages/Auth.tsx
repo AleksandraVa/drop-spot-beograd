@@ -4,7 +4,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Luggage } from 'lucide-react';
+import logo from '@/assets/logo.png';
 
 const Auth = () => {
   const { t } = useLanguage();
@@ -27,9 +27,7 @@ const Auth = () => {
     <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 py-12">
       <div className="w-full max-w-md animate-fade-in">
         <div className="text-center mb-8">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-primary">
-            <Luggage className="h-6 w-6 text-primary-foreground" />
-          </div>
+          <img src={logo} alt="DropSpot" className="mx-auto mb-4 h-12 w-12 rounded-xl object-contain" />
           <h1 className="font-heading text-2xl font-bold text-foreground">
             {isLogin ? t.auth.loginTitle : t.auth.registerTitle}
           </h1>
