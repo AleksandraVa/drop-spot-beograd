@@ -14,6 +14,54 @@ export type Database = {
   }
   public: {
     Tables: {
+      locations: {
+        Row: {
+          address: string
+          approved: boolean
+          available: number
+          capacity: number
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          name: string
+          partner_id: string
+          price_per_hour: number
+          updated_at: string
+          working_hours: string
+        }
+        Insert: {
+          address: string
+          approved?: boolean
+          available?: number
+          capacity?: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          name: string
+          partner_id: string
+          price_per_hour?: number
+          updated_at?: string
+          working_hours: string
+        }
+        Update: {
+          address?: string
+          approved?: boolean
+          available?: number
+          capacity?: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          name?: string
+          partner_id?: string
+          price_per_hour?: number
+          updated_at?: string
+          working_hours?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -40,6 +88,59 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      reservations: {
+        Row: {
+          bags: number
+          confirmation_code: string
+          created_at: string
+          date: string
+          email: string
+          guest_name: string
+          id: string
+          location_id: string
+          phone: string
+          time_from: string
+          time_to: string
+          user_id: string
+        }
+        Insert: {
+          bags?: number
+          confirmation_code: string
+          created_at?: string
+          date: string
+          email: string
+          guest_name: string
+          id?: string
+          location_id: string
+          phone: string
+          time_from: string
+          time_to: string
+          user_id: string
+        }
+        Update: {
+          bags?: number
+          confirmation_code?: string
+          created_at?: string
+          date?: string
+          email?: string
+          guest_name?: string
+          id?: string
+          location_id?: string
+          phone?: string
+          time_from?: string
+          time_to?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reservations_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {
