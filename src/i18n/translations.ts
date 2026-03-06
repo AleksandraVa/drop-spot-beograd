@@ -57,6 +57,8 @@ export const translations = {
       success: 'Uspešna rezervacija!',
       confirmationNumber: 'Broj rezervacije',
       backToLocations: 'Nazad na lokacije',
+      loginRequired: 'Morate biti prijavljeni da biste napravili rezervaciju. Kliknite dugme ispod da se prijavite.',
+      loginToBook: 'Prijavite se za rezervaciju',
     },
     auth: {
       loginTitle: 'Prijavite se',
@@ -72,6 +74,17 @@ export const translations = {
       hasAccount: 'Već imate nalog?',
       registerLink: 'Registrujte se',
       loginLink: 'Prijavite se',
+    },
+    becomePartner: {
+      title: 'Postanite partner',
+      subtitle: 'Registrujte svoju lokaciju za čuvanje prtljaga',
+      accountSection: 'Podaci za nalog',
+      locationSection: 'Podaci o lokaciji',
+      image: 'Slika lokala (opciono)',
+      submitBtn: 'Registruj lokaciju',
+      success: 'Lokacija je uspešno registrovana! Čeka odobrenje administratora.',
+      passwordMismatch: 'Lozinke se ne poklapaju',
+      passwordTooShort: 'Lozinka mora imati najmanje 6 karaktera',
     },
     partner: {
       title: 'Partner panel',
@@ -165,6 +178,8 @@ export const translations = {
       success: 'Booking confirmed!',
       confirmationNumber: 'Booking number',
       backToLocations: 'Back to locations',
+      loginRequired: 'You must be logged in to make a reservation. Click the button below to sign in.',
+      loginToBook: 'Sign in to book',
     },
     auth: {
       loginTitle: 'Sign in',
@@ -180,6 +195,17 @@ export const translations = {
       hasAccount: 'Already have an account?',
       registerLink: 'Register',
       loginLink: 'Sign in',
+    },
+    becomePartner: {
+      title: 'Become a partner',
+      subtitle: 'Register your luggage storage location',
+      accountSection: 'Account details',
+      locationSection: 'Location details',
+      image: 'Location photo (optional)',
+      submitBtn: 'Register location',
+      success: 'Location registered successfully! Awaiting admin approval.',
+      passwordMismatch: 'Passwords do not match',
+      passwordTooShort: 'Password must be at least 6 characters',
     },
     partner: {
       title: 'Partner Panel',
@@ -219,7 +245,6 @@ export const translations = {
   },
 } as const;
 
-// Deep mapped type to get string values
 type DeepStringify<T> = {
   [K in keyof T]: T[K] extends object ? DeepStringify<T[K]> : string;
 };
