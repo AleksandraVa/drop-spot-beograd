@@ -33,7 +33,7 @@ const App = () => (
               <Route path="/locations/:id" element={<LocationDetail />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/become-partner" element={<BecomePartner />} />
-              <Route path="/partner" element={<PasswordGate key="partner"><PartnerDashboard /></PasswordGate>} />
+              <Route path="/partner" element={<PasswordGate key="partner" useAuth><PartnerDashboard /></PasswordGate>} />
               <Route path="/admin" element={<PasswordGate key="admin" correctPassword="456"><AdminDashboard /></PasswordGate>} />
               <Route path="*" element={<NotFound />} />
             </Routes>
