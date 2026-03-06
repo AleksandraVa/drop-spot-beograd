@@ -1,12 +1,14 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '@/i18n/LanguageContext';
-import { Menu, X, Globe, ChevronDown } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
+import { Menu, X, Globe, ChevronDown, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState, useRef, useEffect } from 'react';
 import logo from '@/assets/logo.png';
 
 const Navbar = () => {
   const { t, language, setLanguage } = useLanguage();
+  const { user, signOut } = useAuth();
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [panelsOpen, setPanelsOpen] = useState(false);
@@ -98,11 +100,21 @@ const Navbar = () => {
             {language === 'sr' ? 'EN' : 'SR'}
           </button>
 
-          <Link to="/auth" className="hidden md:block">
-            <Button size="sm" className="bg-gradient-primary font-medium text-primary-foreground hover:opacity-90">
-              {t.nav.login}
-            </Button>
-          </Link>
+          {user ? (
+            <button
+              onClick={() => signOut()}
+              className="hidden md:flex items-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+            >
+              <LogOut className="h-4 w-4" />
+              {t.nav.logout}
+            </button>
+          ) : (
+            <Link to="/auth" className="hidden md:block">
+              <Button size="sm" className="bg-gradient-primary font-medium text-primary-foreground hover:opacity-90">
+                {t.nav.login}
+              </Button>
+            </Link>
+          )}
 
           <button
             className="md:hidden text-foreground"
@@ -152,11 +164,18 @@ const Navbar = () => {
                 {link.label}
               </Link>
             ))}
-            <Link to="/auth" onClick={() => setMobileOpen(false)}>
-              <Button size="sm" className="w-full bg-gradient-primary font-medium text-primary-foreground">
-                {t.nav.login}
+            {user ? (
+              <Button size="sm" variant="outline" className="w-full" onClick={() => { signOut(); setMobileOpen(false); }}>
+                <LogOut className="mr-2 h-4 w-4" />
+                {t.nav.logout}
               </Button>
-            </Link>
+            ) : (
+              <Link to="/auth" onClick={() => setMobileOpen(false)}>
+                <Button size="sm" className="w-full bg-gradient-primary font-medium text-primary-foreground">
+                  {t.nav.login}
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
       )}
