@@ -1,22 +1,60 @@
 import { useLanguage } from '@/i18n/LanguageContext';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { mockPendingPartners, mockLocations } from '@/data/mockData';
 import { Check, X, MapPin } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 import Footer from '@/components/Footer';
 
 const AdminDashboard = () => {
   const { t } = useLanguage();
-  const [partners, setPartners] = useState(mockPendingPartners);
+  const [pendingLocations, setPendingLocations] = useState<any[]>([]);
+  const [allLocations, setAllLocations] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleApprove = (id: string) => {
-    setPartners(partners.filter((p) => p.id !== id));
+  const fetchData = async () => {
+    const { data: pending } = await supabase
+      .from('locations')
+      .select('*')
+      .eq('approved', false);
+    setPendingLocations(pending || []);
+
+    const { data: all } = await supabase
+      .from('locations')
+      .select('*');
+    setAllLocations(all || []);
+    setLoading(false);
   };
 
-  const handleReject = (id: string) => {
-    setPartners(partners.filter((p) => p.id !== id));
+  useEffect(() => { fetchData(); }, []);
+
+  const handleApprove = async (id: string) => {
+    const { error } = await supabase
+      .from('locations')
+      .update({ approved: true })
+      .eq('id', id);
+    if (error) {
+      toast.error(error.message);
+    } else {
+      toast.success(t.admin.approve);
+      fetchData();
+    }
+  };
+
+  const handleReject = async (id: string) => {
+    // Delete the location on reject
+    const { error } = await supabase
+      .from('locations')
+      .delete()
+      .eq('id', id);
+    if (error) {
+      toast.error(error.message);
+    } else {
+      toast.success(t.admin.reject);
+      fetchData();
+    }
   };
 
   return (
@@ -37,18 +75,20 @@ const AdminDashboard = () => {
           </TabsList>
 
           <TabsContent value="partners">
-            {partners.length === 0 ? (
+            {loading ? (
+              <p className="text-muted-foreground py-12 text-center">Loading...</p>
+            ) : pendingLocations.length === 0 ? (
               <p className="text-muted-foreground py-12 text-center">{t.admin.noPartners}</p>
             ) : (
               <div className="grid gap-4 md:grid-cols-2">
-                {partners.map((p) => (
+                {pendingLocations.map((p) => (
                   <div key={p.id} className="rounded-xl border border-border bg-card p-5 shadow-card">
                     <h3 className="font-heading font-bold text-foreground mb-1">{p.name}</h3>
                     <div className="flex items-center gap-1 text-sm text-muted-foreground mb-1">
                       <MapPin className="h-3.5 w-3.5" />
                       {p.address}
                     </div>
-                    <p className="text-sm text-muted-foreground mb-3">{p.email}</p>
+                    <p className="text-sm text-muted-foreground mb-3">{p.working_hours}</p>
                     <Badge variant="secondary" className="mb-3">{t.partner.capacity}: {p.capacity}</Badge>
                     <div className="flex gap-2">
                       <Button size="sm" onClick={() => handleApprove(p.id)} className="bg-gradient-primary text-primary-foreground hover:opacity-90">
@@ -76,15 +116,21 @@ const AdminDashboard = () => {
                       <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">{t.locations.address}</th>
                       <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">{t.locations.capacity}</th>
                       <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">{t.locations.price}</th>
+                      <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">Status</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {mockLocations.map((l) => (
+                    {allLocations.map((l) => (
                       <tr key={l.id} className="border-b border-border last:border-0">
                         <td className="px-4 py-3 text-sm font-medium text-foreground">{l.name}</td>
                         <td className="px-4 py-3 text-sm text-muted-foreground">{l.address}</td>
                         <td className="px-4 py-3 text-sm text-muted-foreground">{l.capacity}</td>
-                        <td className="px-4 py-3 text-sm text-muted-foreground">{l.pricePerHour} RSD</td>
+                        <td className="px-4 py-3 text-sm text-muted-foreground">{l.price_per_hour} RSD</td>
+                        <td className="px-4 py-3 text-sm">
+                          <Badge variant={l.approved ? 'default' : 'secondary'}>
+                            {l.approved ? t.partner.approved : t.partner.pending}
+                          </Badge>
+                        </td>
                       </tr>
                     ))}
                   </tbody>

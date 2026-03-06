@@ -5,12 +5,24 @@ import { Search, Shield, MapPin } from 'lucide-react';
 import heroImage from '@/assets/hero-belgrade.jpg';
 import LocationCard from '@/components/LocationCard';
 import Footer from '@/components/Footer';
-import { mockLocations } from '@/data/mockData';
+import { supabase } from '@/integrations/supabase/client';
+import { useState, useEffect } from 'react';
 
 const Index = () => {
   const { t } = useLanguage();
+  const [featuredLocations, setFeaturedLocations] = useState<any[]>([]);
 
-  const featuredLocations = mockLocations.slice(0, 3);
+  useEffect(() => {
+    const fetch = async () => {
+      const { data } = await supabase
+        .from('locations')
+        .select('*')
+        .eq('approved', true)
+        .limit(3);
+      setFeaturedLocations(data || []);
+    };
+    fetch();
+  }, []);
 
   return (
     <div className="min-h-screen">
@@ -37,7 +49,7 @@ const Index = () => {
                   {t.hero.searchBtn}
                 </Button>
               </Link>
-              <Link to="/auth?role=partner">
+              <Link to="/become-partner">
                 <Button size="lg" variant="outline" className="border-primary-foreground/30 text-primary-foreground bg-primary-foreground/10 backdrop-blur-sm hover:bg-primary-foreground/20">
                   {t.hero.partnerBtn}
                 </Button>
@@ -77,21 +89,33 @@ const Index = () => {
       </section>
 
       {/* Featured locations */}
-      <section className="bg-secondary/50 py-20">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-10">
-            <h2 className="font-heading text-3xl font-bold text-foreground">{t.locations.title}</h2>
-            <Link to="/locations">
-              <Button variant="outline">{t.hero.searchBtn}</Button>
-            </Link>
+      {featuredLocations.length > 0 && (
+        <section className="bg-secondary/50 py-20">
+          <div className="container mx-auto px-4">
+            <div className="flex items-center justify-between mb-10">
+              <h2 className="font-heading text-3xl font-bold text-foreground">{t.locations.title}</h2>
+              <Link to="/locations">
+                <Button variant="outline">{t.hero.searchBtn}</Button>
+              </Link>
+            </div>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {featuredLocations.map((loc) => (
+                <LocationCard
+                  key={loc.id}
+                  id={loc.id}
+                  name={loc.name}
+                  address={loc.address}
+                  workingHours={loc.working_hours}
+                  pricePerHour={loc.price_per_hour}
+                  capacity={loc.capacity}
+                  available={loc.available}
+                  image={loc.image_url || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&h=400&fit=crop'}
+                />
+              ))}
+            </div>
           </div>
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {featuredLocations.map((loc) => (
-              <LocationCard key={loc.id} {...loc} />
-            ))}
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       <Footer />
     </div>
