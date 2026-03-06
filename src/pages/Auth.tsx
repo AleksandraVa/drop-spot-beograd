@@ -1,26 +1,53 @@
 import { useLanguage } from '@/i18n/LanguageContext';
 import { useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useAuth } from '@/hooks/useAuth';
+import { toast } from 'sonner';
 import logo from '@/assets/logo.png';
 
 const Auth = () => {
   const { t } = useLanguage();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const defaultRole = searchParams.get('role') === 'partner' ? 'partner' : 'user';
+  const redirect = searchParams.get('redirect') || '/';
+  const { signIn, signUp } = useAuth();
 
   const [isLogin, setIsLogin] = useState(true);
-  const [role, setRole] = useState<'user' | 'partner'>(defaultRole);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Will connect to backend later
-    alert(isLogin ? 'Login coming soon!' : 'Registration coming soon!');
+    setLoading(true);
+
+    if (isLogin) {
+      const { error } = await signIn(email, password);
+      if (error) {
+        toast.error(error.message);
+      } else {
+        toast.success(t.auth.loginTitle);
+        navigate(redirect);
+      }
+    } else {
+      if (password !== confirmPassword) {
+        toast.error(t.becomePartner.passwordMismatch);
+        setLoading(false);
+        return;
+      }
+      const { error } = await signUp(email, password, 'user');
+      if (error) {
+        toast.error(error.message);
+      } else {
+        toast.success(t.auth.registerTitle);
+        navigate(redirect);
+      }
+    }
+    setLoading(false);
   };
 
   return (
@@ -34,29 +61,6 @@ const Auth = () => {
         </div>
 
         <div className="rounded-xl border border-border bg-card p-6 shadow-card">
-          {!isLogin && (
-            <div className="mb-6 flex rounded-lg border border-border overflow-hidden">
-              <button
-                type="button"
-                onClick={() => setRole('user')}
-                className={`flex-1 py-2.5 text-sm font-medium transition-colors ${
-                  role === 'user' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                {t.auth.asUser}
-              </button>
-              <button
-                type="button"
-                onClick={() => setRole('partner')}
-                className={`flex-1 py-2.5 text-sm font-medium transition-colors ${
-                  role === 'partner' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                {t.auth.asPartner}
-              </button>
-            </div>
-          )}
-
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <div>
               <Label>{t.auth.email}</Label>
@@ -72,8 +76,8 @@ const Auth = () => {
                 <Input type="password" required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
               </div>
             )}
-            <Button type="submit" size="lg" className="bg-gradient-primary text-primary-foreground font-semibold hover:opacity-90">
-              {isLogin ? t.auth.loginBtn : t.auth.registerBtn}
+            <Button type="submit" size="lg" disabled={loading} className="bg-gradient-primary text-primary-foreground font-semibold hover:opacity-90">
+              {loading ? '...' : isLogin ? t.auth.loginBtn : t.auth.registerBtn}
             </Button>
           </form>
 

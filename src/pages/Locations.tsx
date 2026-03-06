@@ -1,16 +1,30 @@
 import { useLanguage } from '@/i18n/LanguageContext';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 import LocationCard from '@/components/LocationCard';
 import Footer from '@/components/Footer';
-import { mockLocations } from '@/data/mockData';
+import { supabase } from '@/integrations/supabase/client';
 
 const Locations = () => {
   const { t } = useLanguage();
   const [search, setSearch] = useState('');
+  const [locations, setLocations] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const filtered = mockLocations.filter(
+  useEffect(() => {
+    const fetch = async () => {
+      const { data } = await supabase
+        .from('locations')
+        .select('*')
+        .eq('approved', true);
+      setLocations(data || []);
+      setLoading(false);
+    };
+    fetch();
+  }, []);
+
+  const filtered = locations.filter(
     (l) =>
       l.name.toLowerCase().includes(search.toLowerCase()) ||
       l.address.toLowerCase().includes(search.toLowerCase())
@@ -37,15 +51,31 @@ const Locations = () => {
       </div>
 
       <div className="container mx-auto px-4 py-12">
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((loc) => (
-            <LocationCard key={loc.id} {...loc} />
-          ))}
-        </div>
-        {filtered.length === 0 && (
-          <p className="text-center text-muted-foreground py-16 text-lg">
-            {t.locations.search} — 0 results
-          </p>
+        {loading ? (
+          <p className="text-center text-muted-foreground py-16">Loading...</p>
+        ) : (
+          <>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {filtered.map((loc) => (
+                <LocationCard
+                  key={loc.id}
+                  id={loc.id}
+                  name={loc.name}
+                  address={loc.address}
+                  workingHours={loc.working_hours}
+                  pricePerHour={loc.price_per_hour}
+                  capacity={loc.capacity}
+                  available={loc.available}
+                  image={loc.image_url || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&h=400&fit=crop'}
+                />
+              ))}
+            </div>
+            {filtered.length === 0 && (
+              <p className="text-center text-muted-foreground py-16 text-lg">
+                {t.locations.search} — 0 results
+              </p>
+            )}
+          </>
         )}
       </div>
       <Footer />
