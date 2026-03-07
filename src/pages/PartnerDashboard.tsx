@@ -58,13 +58,23 @@ const PartnerDashboard = () => {
 
   const handleSave = async () => {
     if (!location) return;
+    const newCapacity = parseInt(locationForm.capacity);
+    // Calculate new available: capacity - reserved bags
+    const { data: resData } = await supabase
+      .from('reservations')
+      .select('bags')
+      .eq('location_id', location.id);
+    const totalBags = (resData || []).reduce((sum: number, r: any) => sum + r.bags, 0);
+    const newAvailable = Math.max(newCapacity - totalBags, 0);
+
     const { error } = await supabase
       .from('locations')
       .update({
         name: locationForm.name,
         address: locationForm.address,
         working_hours: locationForm.workingHours,
-        capacity: parseInt(locationForm.capacity),
+        capacity: newCapacity,
+        available: newAvailable,
         price_per_hour: parseInt(locationForm.pricePerHour),
       })
       .eq('id', location.id);
@@ -73,7 +83,7 @@ const PartnerDashboard = () => {
       toast.error(error.message);
     } else {
       toast.success(t.partner.save);
-      setLocation({ ...location, ...{ name: locationForm.name, address: locationForm.address, working_hours: locationForm.workingHours, capacity: parseInt(locationForm.capacity), price_per_hour: parseInt(locationForm.pricePerHour) } });
+      setLocation({ ...location, name: locationForm.name, address: locationForm.address, working_hours: locationForm.workingHours, capacity: newCapacity, available: newAvailable, price_per_hour: parseInt(locationForm.pricePerHour) });
     }
   };
 
