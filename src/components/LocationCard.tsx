@@ -1,7 +1,8 @@
 import { useLanguage } from '@/i18n/LanguageContext';
 import { MapPin, Clock, Luggage } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
 
 interface LocationCardProps {
   id: string;
@@ -16,6 +17,16 @@ interface LocationCardProps {
 
 const LocationCard = ({ id, name, address, workingHours, pricePerHour, available, image }: LocationCardProps) => {
   const { t } = useLanguage();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleBookClick = () => {
+    if (!user) {
+      navigate(`/auth?redirect=/locations/${id}`);
+    } else {
+      navigate(`/locations/${id}`);
+    }
+  };
 
   return (
     <div className="group overflow-hidden rounded-xl border border-border bg-card shadow-card transition-all duration-300 hover:shadow-card-hover hover:-translate-y-1">
