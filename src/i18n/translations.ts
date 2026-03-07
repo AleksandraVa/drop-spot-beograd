@@ -57,7 +57,7 @@ export const translations = {
       success: 'Uspešna rezervacija!',
       confirmationNumber: 'Broj rezervacije',
       backToLocations: 'Nazad na lokacije',
-      loginRequired: 'Morate biti prijavljeni da biste napravili rezervaciju. Kliknite dugme ispod da se prijavite.',
+      loginRequired: 'Morate biti prijavljeni da biste napravili rezervaciju.',
       loginToBook: 'Prijavite se za rezervaciju',
     },
     auth: {
