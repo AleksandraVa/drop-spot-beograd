@@ -62,11 +62,9 @@ const LocationCard = ({ id, name, address, workingHours, pricePerHour, available
             <span className="font-heading text-xl font-bold">{pricePerHour} RSD</span>
             <span className="text-sm text-muted-foreground">{t.locations.perHour}</span>
           </div>
-          <Link to={`/locations/${id}`}>
-            <Button size="sm" className="bg-gradient-primary text-primary-foreground hover:opacity-90">
-              {t.locations.bookNow}
-            </Button>
-          </Link>
+          <Button size="sm" onClick={handleBookClick} className="bg-gradient-primary text-primary-foreground hover:opacity-90">
+            {t.locations.bookNow}
+          </Button>
         </div>
       </div>
     </div>

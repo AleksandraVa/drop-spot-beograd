@@ -81,13 +81,15 @@ const BecomePartner = () => {
       }
 
       // 3. Insert location
+      const cap = parseInt(form.capacity);
+      const avail = Math.max(1, Math.floor(cap * 0.7));
       const { error: locationError } = await supabase.from('locations').insert({
         partner_id: userId,
         name: form.name,
         address: form.address,
         working_hours: form.workingHours,
-        capacity: parseInt(form.capacity),
-        available: parseInt(form.capacity),
+        capacity: cap,
+        available: avail,
         price_per_hour: parseInt(form.pricePerHour),
         description: form.description || null,
         image_url: imageUrl,
