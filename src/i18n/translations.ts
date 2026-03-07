@@ -178,7 +178,7 @@ export const translations = {
       success: 'Booking confirmed!',
       confirmationNumber: 'Booking number',
       backToLocations: 'Back to locations',
-      loginRequired: 'You must be logged in to make a reservation. Click the button below to sign in.',
+      loginRequired: 'You must be logged in to make a reservation.',
       loginToBook: 'Sign in to book',
     },
     auth: {
