@@ -145,11 +145,6 @@ const LocationDetail = () => {
 
           <div className="rounded-xl border border-border bg-card p-6 shadow-card h-fit">
             <h2 className="font-heading text-xl font-bold text-foreground mb-6">{t.booking.title}</h2>
-            {!user && (
-              <p className="text-sm text-muted-foreground mb-4 p-3 rounded-lg bg-secondary/50 border border-border">
-                {t.booking.loginRequired}
-              </p>
-            )}
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
               <div>
                 <Label>{t.booking.name}</Label>
