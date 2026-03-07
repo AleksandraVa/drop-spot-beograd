@@ -73,6 +73,7 @@ const PartnerDashboard = () => {
       toast.error(error.message);
     } else {
       toast.success(t.partner.save);
+      setLocation({ ...location, ...{ name: locationForm.name, address: locationForm.address, working_hours: locationForm.workingHours, capacity: parseInt(locationForm.capacity), price_per_hour: parseInt(locationForm.pricePerHour) } });
     }
   };
 

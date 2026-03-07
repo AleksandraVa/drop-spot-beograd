@@ -133,8 +133,8 @@ const LocationDetail = () => {
                 {location.working_hours}
               </div>
               <div className="flex items-center gap-2 text-sm text-foreground">
-                <Luggage className="h-4 w-4 text-primary" />
-                {location.available} / {location.capacity} {t.locations.available}
+              <Luggage className="h-4 w-4 text-primary" />
+                {location.available} {t.locations.available}
               </div>
             </div>
             <div className="mt-4 text-foreground">
