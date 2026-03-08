@@ -130,6 +130,7 @@ const AdminDashboard = () => {
                       <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">{t.locations.capacity}</th>
                       <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">{t.locations.price}</th>
                       <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">Status</th>
+                      <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">Akcije</th>
                     </tr>
                   </thead>
                   <tbody>
