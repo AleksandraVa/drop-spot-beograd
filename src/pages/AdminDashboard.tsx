@@ -3,10 +3,15 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Check, X, MapPin, RotateCcw } from 'lucide-react';
+import { Check, X, MapPin } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import Footer from '@/components/Footer';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 
 const AdminDashboard = () => {
   const { t } = useLanguage();
@@ -34,7 +39,7 @@ const AdminDashboard = () => {
   const handleApprove = async (id: string) => {
     const { error } = await supabase
       .from('locations')
-      .update({ approved: true })
+      .update({ approved: true, rejected: false })
       .eq('id', id);
     if (error) {
       toast.error(error.message);
@@ -57,17 +62,37 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleReapprove = async (id: string) => {
-    const { error } = await supabase
-      .from('locations')
-      .update({ approved: true, rejected: false })
-      .eq('id', id);
-    if (error) {
-      toast.error(error.message);
-    } else {
-      toast.success(t.admin.approve);
-      fetchData();
-    }
+  const StatusBadgeWithActions = ({ location }: { location: any }) => {
+    const isPending = !location.approved && !location.rejected;
+    const isApproved = location.approved && !location.rejected;
+    const isRejected = location.rejected;
+
+    const variant = isRejected ? 'destructive' : isApproved ? 'default' : 'secondary';
+    const label = isRejected ? t.partner.rejected : isApproved ? t.partner.approved : t.partner.pending;
+
+    return (
+      <Popover>
+        <PopoverTrigger asChild>
+          <Badge variant={variant} className="cursor-pointer hover:opacity-80 transition-opacity">
+            {label}
+          </Badge>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-2 flex flex-col gap-1" align="start">
+          {(isRejected || isPending) && (
+            <Button size="sm" variant="ghost" className="justify-start text-sm" onClick={() => handleApprove(location.id)}>
+              <Check className="mr-1.5 h-3.5 w-3.5 text-primary" />
+              {t.admin.approve}
+            </Button>
+          )}
+          {(isApproved || isPending) && (
+            <Button size="sm" variant="ghost" className="justify-start text-sm text-destructive" onClick={() => handleReject(location.id)}>
+              <X className="mr-1.5 h-3.5 w-3.5" />
+              {t.admin.reject}
+            </Button>
+          )}
+        </PopoverContent>
+      </Popover>
+    );
   };
 
   return (
@@ -130,7 +155,6 @@ const AdminDashboard = () => {
                       <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">{t.locations.capacity}</th>
                       <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">{t.locations.price}</th>
                       <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">Status</th>
-                      <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">Akcije</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -141,23 +165,7 @@ const AdminDashboard = () => {
                         <td className="px-4 py-3 text-sm text-muted-foreground">{l.capacity}</td>
                         <td className="px-4 py-3 text-sm text-muted-foreground">{l.price_per_hour} RSD</td>
                         <td className="px-4 py-3 text-sm">
-                          <Badge variant={l.rejected ? 'destructive' : l.approved ? 'default' : 'secondary'}>
-                            {l.rejected ? t.partner.rejected : l.approved ? t.partner.approved : t.partner.pending}
-                          </Badge>
-                        </td>
-                        <td className="px-4 py-3 text-sm">
-                          {l.approved && !l.rejected && (
-                            <Button size="sm" variant="outline" onClick={() => handleReject(l.id)} className="text-destructive border-destructive/30 hover:bg-destructive/10">
-                              <X className="mr-1 h-3.5 w-3.5" />
-                              {t.admin.reject}
-                            </Button>
-                          )}
-                          {l.rejected && !l.approved && (
-                            <Button size="sm" onClick={() => handleReapprove(l.id)} className="bg-gradient-primary text-primary-foreground hover:opacity-90">
-                              <Check className="mr-1 h-3.5 w-3.5" />
-                              {t.admin.approve}
-                            </Button>
-                          )}
+                          <StatusBadgeWithActions location={l} />
                         </td>
                       </tr>
                     ))}
