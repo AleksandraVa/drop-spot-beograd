@@ -18,7 +18,8 @@ const AdminDashboard = () => {
     const { data: pending } = await supabase
       .from('locations')
       .select('*')
-      .eq('approved', false);
+      .eq('approved', false)
+      .eq('rejected', false);
     setPendingLocations(pending || []);
 
     const { data: all } = await supabase
