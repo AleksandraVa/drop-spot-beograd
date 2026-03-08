@@ -47,12 +47,25 @@ const AdminDashboard = () => {
   const handleReject = async (id: string) => {
     const { error } = await supabase
       .from('locations')
-      .update({ rejected: true })
+      .update({ rejected: true, approved: false })
       .eq('id', id);
     if (error) {
       toast.error(error.message);
     } else {
       toast.success(t.admin.reject);
+      fetchData();
+    }
+  };
+
+  const handleReapprove = async (id: string) => {
+    const { error } = await supabase
+      .from('locations')
+      .update({ approved: true, rejected: false })
+      .eq('id', id);
+    if (error) {
+      toast.error(error.message);
+    } else {
+      toast.success(t.admin.approve);
       fetchData();
     }
   };
