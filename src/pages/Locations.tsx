@@ -17,7 +17,8 @@ const Locations = () => {
       const { data } = await supabase
         .from('locations')
         .select('*')
-        .eq('approved', true);
+        .eq('approved', true)
+        .eq('rejected', false);
       setLocations(data || []);
       setLoading(false);
     };

@@ -18,7 +18,8 @@ const AdminDashboard = () => {
     const { data: pending } = await supabase
       .from('locations')
       .select('*')
-      .eq('approved', false);
+      .eq('approved', false)
+      .eq('rejected', false);
     setPendingLocations(pending || []);
 
     const { data: all } = await supabase
@@ -44,10 +45,9 @@ const AdminDashboard = () => {
   };
 
   const handleReject = async (id: string) => {
-    // Delete the location on reject
     const { error } = await supabase
       .from('locations')
-      .delete()
+      .update({ rejected: true })
       .eq('id', id);
     if (error) {
       toast.error(error.message);
@@ -127,8 +127,8 @@ const AdminDashboard = () => {
                         <td className="px-4 py-3 text-sm text-muted-foreground">{l.capacity}</td>
                         <td className="px-4 py-3 text-sm text-muted-foreground">{l.price_per_hour} RSD</td>
                         <td className="px-4 py-3 text-sm">
-                          <Badge variant={l.approved ? 'default' : 'secondary'}>
-                            {l.approved ? t.partner.approved : t.partner.pending}
+                          <Badge variant={l.rejected ? 'destructive' : l.approved ? 'default' : 'secondary'}>
+                            {l.rejected ? t.partner.rejected : l.approved ? t.partner.approved : t.partner.pending}
                           </Badge>
                         </td>
                       </tr>
