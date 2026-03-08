@@ -73,9 +73,11 @@ const AdminDashboard = () => {
     return (
       <Popover>
         <PopoverTrigger asChild>
-          <Badge variant={variant} className="cursor-pointer hover:opacity-80 transition-opacity">
-            {label}
-          </Badge>
+          <button type="button" className="inline-flex">
+            <Badge variant={variant} className="cursor-pointer hover:opacity-80 transition-opacity">
+              {label}
+            </Badge>
+          </button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-2 flex flex-col gap-1" align="start">
           {(isRejected || isPending) && (
