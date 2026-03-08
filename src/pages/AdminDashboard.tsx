@@ -144,6 +144,20 @@ const AdminDashboard = () => {
                             {l.rejected ? t.partner.rejected : l.approved ? t.partner.approved : t.partner.pending}
                           </Badge>
                         </td>
+                        <td className="px-4 py-3 text-sm">
+                          {l.approved && !l.rejected && (
+                            <Button size="sm" variant="outline" onClick={() => handleReject(l.id)} className="text-destructive border-destructive/30 hover:bg-destructive/10">
+                              <X className="mr-1 h-3.5 w-3.5" />
+                              {t.admin.reject}
+                            </Button>
+                          )}
+                          {l.rejected && !l.approved && (
+                            <Button size="sm" onClick={() => handleReapprove(l.id)} className="bg-gradient-primary text-primary-foreground hover:opacity-90">
+                              <Check className="mr-1 h-3.5 w-3.5" />
+                              {t.admin.approve}
+                            </Button>
+                          )}
+                        </td>
                       </tr>
                     ))}
                   </tbody>
