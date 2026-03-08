@@ -1,0 +1,2 @@
+-- Update existing locations to include days in working hours
+UPDATE public.locations SET working_hours = 'Pon-Ned ' || working_hours WHERE working_hours NOT LIKE '%Pon%' AND working_hours NOT LIKE '%Mon%';
