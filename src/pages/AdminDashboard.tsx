@@ -127,8 +127,8 @@ const AdminDashboard = () => {
                         <td className="px-4 py-3 text-sm text-muted-foreground">{l.capacity}</td>
                         <td className="px-4 py-3 text-sm text-muted-foreground">{l.price_per_hour} RSD</td>
                         <td className="px-4 py-3 text-sm">
-                          <Badge variant={l.approved ? 'default' : 'secondary'}>
-                            {l.approved ? t.partner.approved : t.partner.pending}
+                          <Badge variant={l.rejected ? 'destructive' : l.approved ? 'default' : 'secondary'}>
+                            {l.rejected ? t.partner.rejected : l.approved ? t.partner.approved : t.partner.pending}
                           </Badge>
                         </td>
                       </tr>
