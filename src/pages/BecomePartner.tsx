@@ -155,7 +155,7 @@ const BecomePartner = () => {
                   </div>
                   <div>
                     <Label>{t.partner.workingHours} *</Label>
-                    <Input required value={form.workingHours} onChange={(e) => setForm({ ...form, workingHours: e.target.value })} placeholder="08:00 - 22:00" />
+                    <Input required value={form.workingHours} onChange={(e) => setForm({ ...form, workingHours: e.target.value })} placeholder="Pon-Pet 08:00 - 22:00" />
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
