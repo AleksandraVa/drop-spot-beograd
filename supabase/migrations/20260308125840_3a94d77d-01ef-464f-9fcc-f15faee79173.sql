@@ -1,0 +1,1 @@
+ALTER TABLE public.locations ADD COLUMN rejected boolean NOT NULL DEFAULT false;

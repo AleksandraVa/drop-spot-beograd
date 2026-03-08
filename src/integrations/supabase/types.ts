@@ -27,6 +27,7 @@ export type Database = {
           name: string
           partner_id: string
           price_per_hour: number
+          rejected: boolean
           updated_at: string
           working_hours: string
         }
@@ -42,6 +43,7 @@ export type Database = {
           name: string
           partner_id: string
           price_per_hour?: number
+          rejected?: boolean
           updated_at?: string
           working_hours: string
         }
@@ -57,6 +59,7 @@ export type Database = {
           name?: string
           partner_id?: string
           price_per_hour?: number
+          rejected?: boolean
           updated_at?: string
           working_hours?: string
         }
