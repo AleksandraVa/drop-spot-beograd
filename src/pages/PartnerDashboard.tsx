@@ -131,7 +131,7 @@ const PartnerDashboard = () => {
                   </div>
                   <div>
                     <Label>{t.partner.workingHours}</Label>
-                    <Input value={locationForm.workingHours} onChange={(e) => setLocationForm({ ...locationForm, workingHours: e.target.value })} />
+                    <Input value={locationForm.workingHours} onChange={(e) => setLocationForm({ ...locationForm, workingHours: e.target.value })} placeholder="Pon-Pet 08:00 - 22:00" />
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
