@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Check, X, MapPin } from 'lucide-react';
+import { Check, X, MapPin, RotateCcw } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import Footer from '@/components/Footer';
@@ -47,12 +47,25 @@ const AdminDashboard = () => {
   const handleReject = async (id: string) => {
     const { error } = await supabase
       .from('locations')
-      .update({ rejected: true })
+      .update({ rejected: true, approved: false })
       .eq('id', id);
     if (error) {
       toast.error(error.message);
     } else {
       toast.success(t.admin.reject);
+      fetchData();
+    }
+  };
+
+  const handleReapprove = async (id: string) => {
+    const { error } = await supabase
+      .from('locations')
+      .update({ approved: true, rejected: false })
+      .eq('id', id);
+    if (error) {
+      toast.error(error.message);
+    } else {
+      toast.success(t.admin.approve);
       fetchData();
     }
   };
@@ -117,6 +130,7 @@ const AdminDashboard = () => {
                       <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">{t.locations.capacity}</th>
                       <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">{t.locations.price}</th>
                       <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">Status</th>
+                      <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">Akcije</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -130,6 +144,20 @@ const AdminDashboard = () => {
                           <Badge variant={l.rejected ? 'destructive' : l.approved ? 'default' : 'secondary'}>
                             {l.rejected ? t.partner.rejected : l.approved ? t.partner.approved : t.partner.pending}
                           </Badge>
+                        </td>
+                        <td className="px-4 py-3 text-sm">
+                          {l.approved && !l.rejected && (
+                            <Button size="sm" variant="outline" onClick={() => handleReject(l.id)} className="text-destructive border-destructive/30 hover:bg-destructive/10">
+                              <X className="mr-1 h-3.5 w-3.5" />
+                              {t.admin.reject}
+                            </Button>
+                          )}
+                          {l.rejected && !l.approved && (
+                            <Button size="sm" onClick={() => handleReapprove(l.id)} className="bg-gradient-primary text-primary-foreground hover:opacity-90">
+                              <Check className="mr-1 h-3.5 w-3.5" />
+                              {t.admin.approve}
+                            </Button>
+                          )}
                         </td>
                       </tr>
                     ))}
