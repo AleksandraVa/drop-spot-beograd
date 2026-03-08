@@ -45,10 +45,9 @@ const AdminDashboard = () => {
   };
 
   const handleReject = async (id: string) => {
-    // Delete the location on reject
     const { error } = await supabase
       .from('locations')
-      .delete()
+      .update({ rejected: true })
       .eq('id', id);
     if (error) {
       toast.error(error.message);
